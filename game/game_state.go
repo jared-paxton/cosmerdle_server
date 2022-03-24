@@ -19,12 +19,12 @@ type Guess struct {
 type Status int
 
 const (
-    InProgress Status = 0
-    Won Status = 1
-    Lost Status = 2
+	InProgress Status = 0
+	Won        Status = 1
+	Lost       Status = 2
 )
 
 type GameState struct {
 	Guesses    []Guess
-    CurrStatus Status
+	CurrStatus Status
 }
