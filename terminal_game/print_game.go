@@ -15,7 +15,11 @@ func printEmptyRow(rowNum int, printMarker bool) {
 	} else {
 		fmt.Print("    ")
 	}
-	fmt.Println(rowNum, "|     |     |     |     |     |")
+	fmt.Printf("%d |", rowNum)
+	for i := 0; i < g.NumLetters; i++ {
+		fmt.Print("     |")
+	}
+	fmt.Println()
 }
 
 // printWordRow prints each letter of the word in a "table row" like format, a letter per "cell".
@@ -24,7 +28,12 @@ func printWordRow(word string, rowNum int) error {
 		return errors.New("wrong number of letters: cannot print row")
 	}
 
-	fmt.Printf("    %d |  %c  |  %c  |  %c  |  %c  |  %c  | \n", rowNum, word[0], word[1], word[2], word[3], word[4])
+	fmt.Printf("    %d |", rowNum)
+	for i := 0; i < len(word); i++ {
+		fmt.Printf("  %c  |", word[i])
+	}
+	fmt.Println()
+
 	return nil
 }
 
@@ -70,9 +79,9 @@ func printBoard(guesses []g.Guess) error {
 func PrintGame(gameState g.GameState, correctWord string) error {
 	fmt.Println("\n-------------------------------------------")
 	err := printBoard(gameState.Guesses)
-    if err != nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 
 	fmt.Println("-------------------------------------------")
 	switch gameState.CurrStatus {
@@ -87,5 +96,5 @@ func PrintGame(gameState g.GameState, correctWord string) error {
 	fmt.Println("-------------------------------------------")
 	fmt.Println()
 
-    return nil
+	return nil
 }
