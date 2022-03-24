@@ -16,6 +16,7 @@ func printEmptyRow(rowNum int, printMarker bool) {
 		fmt.Print("    ")
 	}
 	fmt.Printf("%d |", rowNum)
+
 	for i := 0; i < g.NumLetters; i++ {
 		fmt.Print("     |")
 	}
@@ -30,7 +31,11 @@ func printWordRow(word string, rowNum int) error {
 
 	fmt.Printf("    %d |", rowNum)
 	for i := 0; i < len(word); i++ {
-		fmt.Printf("  %c  |", word[i])
+		if i == len(word)-1 {
+			fmt.Printf("  %c  |", word[i])
+		} else {
+			fmt.Printf("  %c   ", word[i])
+		}
 	}
 	fmt.Println()
 
@@ -42,15 +47,22 @@ func printWordRow(word string, rowNum int) error {
 // the letter is in the right position.
 func printLetterStatusRow(lettersStatus [g.NumLetters]g.LetterStatus) {
 	row := "      |"
-	for _, status := range lettersStatus {
+	endChar := " "
+	for i, status := range lettersStatus {
+		if i == len(lettersStatus)-1 {
+			endChar = "|"
+		}
+
 		switch status {
 		case g.SamePosition:
-			row += "  :) |"
+			row += "  :) "
 		case g.DiffPosition:
-			row += "  :/ |"
+			row += "  :/ "
 		case g.NotPresent:
-			row += "  :( |"
+			row += "  :( "
 		}
+
+		row += endChar
 	}
 	fmt.Println(row)
 }
@@ -64,6 +76,7 @@ func printBoard(guesses []g.Guess) error {
 			return err
 		}
 		printLetterStatusRow(guess.LettersStatus)
+		fmt.Println()
 	}
 
 	printCurrMarker := true
