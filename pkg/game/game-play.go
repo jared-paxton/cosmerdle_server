@@ -58,6 +58,7 @@ func checkLetterPositions(guess *Guess, currPos int, correctWord string, letters
 			return DiffPosition
 		}
 	}
+
 	return NotPresent
 }
 
