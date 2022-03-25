@@ -1,10 +1,10 @@
-package terminal_game
+package console
 
 import (
 	"errors"
 	"fmt"
 
-	g "github.com/jared-paxton/cosmerdle_server/game"
+	g "github.com/jared-paxton/cosmerdle_server/pkg/game"
 )
 
 // printEmptyRow prints an empty row for the bame board to indicate the guesses the user has left.
@@ -54,7 +54,7 @@ func printLetterStatusRow(lettersStatus [g.NumLetters]g.LetterStatus) {
 		}
 
 		switch status {
-		case g.SamePosition:
+		case g.Correct:
 			row += "  :) "
 		case g.DiffPosition:
 			row += "  :/ "
@@ -89,7 +89,7 @@ func printBoard(guesses []g.Guess) error {
 	return nil
 }
 
-func PrintGame(gameState g.GameState, correctWord string) error {
+func printGame(gameState *g.GameState) error {
 	fmt.Println("\n-------------------------------------------")
 	err := printBoard(gameState.Guesses)
 	if err != nil {
@@ -104,7 +104,7 @@ func PrintGame(gameState g.GameState, correctWord string) error {
 		fmt.Println("              WON!!!")
 	case g.Lost:
 		fmt.Println("             LOST :'(")
-		fmt.Println("         Word is:", correctWord)
+		fmt.Println("         Word is:", gameState.CorrectWord)
 	}
 	fmt.Println("-------------------------------------------")
 	fmt.Println()

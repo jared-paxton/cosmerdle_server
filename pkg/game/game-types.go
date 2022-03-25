@@ -6,7 +6,7 @@ const NumLetters = 5
 type LetterStatus int
 
 const (
-	SamePosition LetterStatus = 0
+	Correct      LetterStatus = 0
 	DiffPosition LetterStatus = 1
 	NotPresent   LetterStatus = 2
 )
@@ -25,6 +25,7 @@ const (
 )
 
 type GameState struct {
-	Guesses    []Guess
-	CurrStatus Status
+	Guesses     []Guess
+	CurrStatus  Status
+	CorrectWord string
 }
