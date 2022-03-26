@@ -9,11 +9,11 @@ func TestPrintGame(t *testing.T) {
 
 	guess1 := Guess{
 		Word:          "GUESS",
-		LettersStatus: [NumLetters]LetterStatus{NotPresent, NotPresent, NotPresent, DiffPosition, NotPresent},
+		Statuses: [NumLetters]LetterStatus{NotPresent, NotPresent, NotPresent, DiffPosition, NotPresent},
 	}
 	guess2 := Guess{
 		Word:          "STATE",
-		LettersStatus: [NumLetters]LetterStatus{Correct, Correct, NotPresent, NotPresent, NotPresent},
+		Statuses: [NumLetters]LetterStatus{Correct, Correct, NotPresent, NotPresent, NotPresent},
 	}
 	// guess3 := Guess{
 	// 	Word:          "STONE",
@@ -21,11 +21,11 @@ func TestPrintGame(t *testing.T) {
 	// }
 	guess4 := Guess{
 		Word:          "STOMP",
-		LettersStatus: [NumLetters]LetterStatus{Correct, Correct, Correct, DiffPosition, NotPresent},
+		Statuses: [NumLetters]LetterStatus{Correct, Correct, Correct, DiffPosition, NotPresent},
 	}
 	guess5 := Guess{
 		Word:          "STORM",
-		LettersStatus: [NumLetters]LetterStatus{Correct, Correct, Correct, Correct, Correct},
+		Statuses: [NumLetters]LetterStatus{Correct, Correct, Correct, Correct, Correct},
 	}
 
 	gameState := GameState{
@@ -34,7 +34,10 @@ func TestPrintGame(t *testing.T) {
 		CurrGuess:  1,
 	}
 
-	err := printGame(&gameState, todaysWord)
+	// In this case, called just to set the correct word for the test 
+	InitGameState(todaysWord)
+
+	err := gameState.printGame()
 	if err != nil {
 		t.Fatal("printing the game failed for some reason")
 	}

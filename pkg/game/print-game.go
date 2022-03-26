@@ -21,18 +21,18 @@ func printEmptyRow(rowNum int, printMarker bool) {
 	fmt.Println()
 }
 
-// printWordRow prints each letter of the word in a "table row" like format, a letter per "cell".
-func printWordRow(word string, rowNum int) error {
-	if len(word) != NumLetters {
+// print prints each letter of the word in a "table row" like format, a letter per "cell".
+func (g *Guess) printRow(rowNum int) error {
+	if len(g.Word) != NumLetters {
 		return errors.New("wrong number of letters: cannot print row")
 	}
 
 	fmt.Printf("    %d |", rowNum)
-	for i := 0; i < len(word); i++ {
-		if i == len(word)-1 {
-			fmt.Printf("  %c  |", word[i])
+	for i := 0; i < len(g.Word); i++ {
+		if i == len(g.Word)-1 {
+			fmt.Printf("  %c  |", g.Word[i])
 		} else {
-			fmt.Printf("  %c   ", word[i])
+			fmt.Printf("  %c   ", g.Word[i])
 		}
 	}
 	fmt.Println()
@@ -40,10 +40,10 @@ func printWordRow(word string, rowNum int) error {
 	return nil
 }
 
-// printLetterStatusRow prints the statuses of each letter in a "table row" like format, with one letter status per "cell".
+// printStatusesRow prints the statuses of each letter in a "table row" like format, with one letter status per "cell".
 // A :( means the letter is not in the word. A :/ means the letter is in the word but in a wrong position. A :) means
 // the letter is in the right position.
-func printLetterStatusRow(lettersStatus [NumLetters]LetterStatus) {
+func printStatusesRow(lettersStatus [NumLetters]LetterStatus) {
 	row := "      |"
 	endChar := " "
 	for i, status := range lettersStatus {
@@ -69,11 +69,11 @@ func printLetterStatusRow(lettersStatus [NumLetters]LetterStatus) {
 func printBoard(guesses []Guess) error {
 	var err error
 	for i, guess := range guesses {
-		err = printWordRow(guess.Word, i+1)
+		err = guess.printRow(i + 1)
 		if err != nil {
 			return err
 		}
-		printLetterStatusRow(guess.LettersStatus)
+		printStatusesRow(guess.Statuses)
 		fmt.Println()
 	}
 
@@ -87,22 +87,22 @@ func printBoard(guesses []Guess) error {
 	return nil
 }
 
-func printGame(gameState *GameState, correctWord string) error {
+func (gs *GameState) printGame() error {
 	fmt.Println("\n-------------------------------------------")
-	err := printBoard(gameState.Guesses)
+	err := printBoard(gs.Guesses)
 	if err != nil {
 		return err
 	}
 
 	fmt.Println("-------------------------------------------")
-	switch gameState.CurrStatus {
+	switch gs.CurrStatus {
 	case InProgress:
 		fmt.Println("           IN PROGRESS")
 	case Won:
 		fmt.Println("              WON!!!")
 	case Lost:
 		fmt.Println("             LOST :'(")
-		fmt.Println("         Word is:", correctWord)
+		fmt.Println("         Word is:", GetCorrectWord())
 	}
 	fmt.Println("-------------------------------------------")
 	fmt.Println()
