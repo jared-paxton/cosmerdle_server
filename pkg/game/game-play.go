@@ -1,73 +1,108 @@
 package game
 
-import "fmt"
+import (
+	"errors"
+	"strings"
 
-func MakeGuess(userWord string, state *GameState) {
-	// Default
+	"github.com/jared-paxton/cosmerdle_server/pkg/db"
+)
+
+func GetCorrectWord() string {
+	return correctWord
+}
+
+func InitGameState(word string) GameState {
+	state := GameState{
+		Guesses:    make([]Guess, MaxGuesses),
+		CurrStatus: InProgress,
+		CurrGuess:  1,
+	}
+	correctWord = word
+
+	return state
+}
+
+func MakeGuess(userWord string, state *GameState) error {
+	userWord = strings.ToUpper(userWord)
+
+	// Default each letter to NotPresent
 	guess := Guess{
 		Word:          userWord,
 		LettersStatus: [NumLetters]LetterStatus{NotPresent, NotPresent, NotPresent, NotPresent, NotPresent},
 	}
 
-	correctGuess := isGuessCorrect(&guess, state.CorrectWord)
-	state.Guesses = append(state.Guesses, guess)
-	updateGameStatus(correctGuess, state)
-}
-
-func updateGameStatus(correctGuess bool, state *GameState) {
-	if correctGuess {
-		state.CurrStatus = Won
-	} else if len(state.Guesses) == MaxGuesses {
-		state.CurrStatus = Lost
-	} else {
-		state.CurrStatus = InProgress
+	err := guess.isValid(state.CurrGuess)
+	if err != nil {
+		return err
 	}
+
+	correctGuess := guess.isCorrect(correctWord)
+	state.addGuess(guess)
+	state.updateGameStatus(correctGuess)
+
+	return nil
 }
 
-func isGuessCorrect(guess *Guess, correctWord string) bool {
+func (gs *GameState) addGuess(guess Guess) {
+	gs.Guesses[gs.CurrGuess-1] = guess
+}
 
+func (gs *GameState) updateGameStatus(correctGuess bool) {
+	if correctGuess {
+		gs.CurrStatus = Won
+	} else if gs.CurrGuess == MaxGuesses {
+		gs.CurrStatus = Lost
+	} else {
+		gs.CurrStatus = InProgress
+	}
+
+	gs.CurrGuess++
+}
+
+func (g *Guess) isValid(currGuess int) error {
+	if len(g.Word) > NumLetters {
+		return errors.New("number of letters exceeds max")
+	} else if len(g.Word) < NumLetters {
+		return errors.New("not enough letters in word")
+	} else if !db.IsWordInBank(g.Word) {
+		return errors.New("word is not a part of the cosmere")
+	} else if currGuess > MaxGuesses {
+		return errors.New("exceeded max number of guesses")
+	}
+
+	return nil
+}
+
+func (g *Guess) isCorrect(correctWord string) bool {
 	correctGuess := true
-	for i := range guess.Word {
-		fmt.Printf("curr user letter: %s  VS  actual word letter: %s\n", string(guess.Word[i]), string(correctWord[i]))
-		if guess.Word[i] == correctWord[i] {
-			guess.LettersStatus[i] = Correct
+	for i := range g.Word {
+		if g.Word[i] == correctWord[i] {
+			g.LettersStatus[i] = Correct
 		} else {
 			correctGuess = false
 		}
-
 	}
 
 	letterRepresented := make(map[int]bool)
-	for i := range guess.Word {
-		if guess.LettersStatus[i] == Correct {
-			continue
+	for i := range g.Word {
+		if g.LettersStatus[i] != Correct {
+			g.checkLetterPositions(i, correctWord, letterRepresented)
 		}
-		guess.LettersStatus[i] = checkLetterPositions(guess, i, correctWord, letterRepresented)
 	}
 
 	return correctGuess
 }
 
-func checkLetterPositions(guess *Guess, currPos int, correctWord string, lettersMap map[int]bool) LetterStatus {
+func (g *Guess) checkLetterPositions(currPos int, correctWord string, lettersMap map[int]bool) {
 	for i := range correctWord {
-		if guess.LettersStatus[i] == Correct || lettersMap[i] {
+		if g.LettersStatus[i] == Correct || lettersMap[i] {
 			continue
 		}
-		if guess.Word[currPos] == correctWord[i] {
+		if g.Word[currPos] == correctWord[i] {
 			lettersMap[i] = true
-			return DiffPosition
+			g.LettersStatus[currPos] = DiffPosition
+			return
 		}
 	}
-
-	return NotPresent
-}
-
-func InitGameState(correctWord string) GameState {
-	state := GameState{
-		Guesses:     make([]Guess, 0),
-		CurrStatus:  InProgress,
-		CorrectWord: correctWord,
-	}
-
-	return state
+	g.LettersStatus[currPos] = NotPresent
 }

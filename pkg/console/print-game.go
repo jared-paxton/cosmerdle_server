@@ -89,7 +89,7 @@ func printBoard(guesses []g.Guess) error {
 	return nil
 }
 
-func printGame(gameState *g.GameState) error {
+func printGame(gameState *g.GameState, correctWord string) error {
 	fmt.Println("\n-------------------------------------------")
 	err := printBoard(gameState.Guesses)
 	if err != nil {
@@ -104,7 +104,7 @@ func printGame(gameState *g.GameState) error {
 		fmt.Println("              WON!!!")
 	case g.Lost:
 		fmt.Println("             LOST :'(")
-		fmt.Println("         Word is:", gameState.CorrectWord)
+		fmt.Println("         Word is:", correctWord)
 	}
 	fmt.Println("-------------------------------------------")
 	fmt.Println()

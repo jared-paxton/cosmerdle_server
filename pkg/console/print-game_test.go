@@ -30,13 +30,14 @@ func TestPrintGame(t *testing.T) {
 		LettersStatus: [g.NumLetters]g.LetterStatus{g.Correct, g.Correct, g.Correct, g.Correct, g.Correct},
 	}
 
+
 	gameState := g.GameState{
 		Guesses:     []g.Guess{guess1, guess2, guess4, guess5},
 		CurrStatus:  g.Won,
-		CorrectWord: todaysWord,
+		CurrGuess:   1,
 	}
 
-	err := printGame(&gameState)
+	err := printGame(&gameState, todaysWord)
 	if err != nil {
 		t.Fatal("printing the game failed for some reason")
 	}
