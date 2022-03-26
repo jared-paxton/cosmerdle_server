@@ -15,24 +15,24 @@ func printEmptyRow(rowNum int, printMarker bool) {
 	}
 	fmt.Printf("%d |", rowNum)
 
-	for i := 0; i < NumLetters; i++ {
+	for i := 0; i < numLetters; i++ {
 		fmt.Print("     |")
 	}
 	fmt.Println()
 }
 
 // print prints each letter of the word in a "table row" like format, a letter per "cell".
-func (g *Guess) printRow(rowNum int) error {
-	if len(g.Word) != NumLetters {
+func (g *guess) printRow(rowNum int) error {
+	if len(g.word) != numLetters {
 		return errors.New("wrong number of letters: cannot print row")
 	}
 
 	fmt.Printf("    %d |", rowNum)
-	for i := 0; i < len(g.Word); i++ {
-		if i == len(g.Word)-1 {
-			fmt.Printf("  %c  |", g.Word[i])
+	for i := 0; i < len(g.word); i++ {
+		if i == len(g.word)-1 {
+			fmt.Printf("  %c  |", g.word[i])
 		} else {
-			fmt.Printf("  %c   ", g.Word[i])
+			fmt.Printf("  %c   ", g.word[i])
 		}
 	}
 	fmt.Println()
@@ -43,7 +43,7 @@ func (g *Guess) printRow(rowNum int) error {
 // printStatusesRow prints the statuses of each letter in a "table row" like format, with one letter status per "cell".
 // A :( means the letter is not in the word. A :/ means the letter is in the word but in a wrong position. A :) means
 // the letter is in the right position.
-func printStatusesRow(lettersStatus [NumLetters]LetterStatus) {
+func printStatusesRow(lettersStatus [numLetters]letterStatus) {
 	row := "      |"
 	endChar := " "
 	for i, status := range lettersStatus {
@@ -52,11 +52,11 @@ func printStatusesRow(lettersStatus [NumLetters]LetterStatus) {
 		}
 
 		switch status {
-		case Correct:
+		case correct:
 			row += "  :) "
-		case DiffPosition:
+		case diffPosition:
 			row += "  :/ "
-		case NotPresent:
+		case notPresent:
 			row += "  :( "
 		}
 
@@ -66,20 +66,20 @@ func printStatusesRow(lettersStatus [NumLetters]LetterStatus) {
 }
 
 // PrintBoard prints the game board to the terminal in an understandable format.
-func printBoard(guesses []Guess) error {
+func printBoard(guesses []guess) error {
 	var err error
 	for i, guess := range guesses {
 		err = guess.printRow(i + 1)
 		if err != nil {
 			return err
 		}
-		printStatusesRow(guess.Statuses)
+		printStatusesRow(guess.statuses)
 		fmt.Println()
 	}
 
 	printCurrMarker := true
 	printedRows := len(guesses)
-	for printedRows < MaxGuesses {
+	for printedRows < maxGuesses {
 		printEmptyRow(printedRows+1, printCurrMarker)
 		printCurrMarker = false
 		printedRows++
@@ -87,15 +87,15 @@ func printBoard(guesses []Guess) error {
 	return nil
 }
 
-func (gs *GameState) printGame() error {
+func (gs *gameState) printGame() error {
 	fmt.Println("\n-------------------------------------------")
-	err := printBoard(gs.Guesses)
+	err := printBoard(gs.guesses)
 	if err != nil {
 		return err
 	}
 
 	fmt.Println("-------------------------------------------")
-	switch gs.CurrStatus {
+	switch gs.currStatus {
 	case InProgress:
 		fmt.Println("           IN PROGRESS")
 	case Won:

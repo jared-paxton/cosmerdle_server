@@ -1,34 +1,34 @@
 package game
 
-const MaxGuesses = 6
-const NumLetters = 5
+const maxGuesses = 6
+const numLetters = 5
 
-type LetterStatus int
+type letterStatus int
 
 const (
-	Default      LetterStatus = 0
-	Correct      LetterStatus = 1
-	DiffPosition LetterStatus = 2
-	NotPresent   LetterStatus = 3
+	initial      letterStatus = 0
+	correct      letterStatus = 1
+	diffPosition letterStatus = 2
+	notPresent   letterStatus = 3
 )
 
-type Guess struct {
-	Word     string
-	Statuses [NumLetters]LetterStatus
+type guess struct {
+	word     string
+	statuses [numLetters]letterStatus
 }
 
-type Status int
+type gameStatus int
 
 const (
-	InProgress Status = 0
-	Won        Status = 1
-	Lost       Status = 2
+	InProgress gameStatus = 0
+	Won        gameStatus = 1
+	Lost       gameStatus = 2
 )
 
 var correctWord string
 
-type GameState struct {
-	Guesses    []Guess
-	CurrStatus Status
-	CurrGuess  int
+type gameState struct {
+	guesses    []guess
+	currStatus gameStatus
+	currGuess  int
 }

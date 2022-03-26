@@ -7,34 +7,34 @@ import (
 func TestPrintGame(t *testing.T) {
 	todaysWord := "STORM"
 
-	guess1 := Guess{
-		Word:          "GUESS",
-		Statuses: [NumLetters]LetterStatus{NotPresent, NotPresent, NotPresent, DiffPosition, NotPresent},
+	guess1 := guess{
+		word:     "GUESS",
+		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, diffPosition, notPresent},
 	}
-	guess2 := Guess{
-		Word:          "STATE",
-		Statuses: [NumLetters]LetterStatus{Correct, Correct, NotPresent, NotPresent, NotPresent},
+	guess2 := guess{
+		word:     "STATE",
+		statuses: [numLetters]letterStatus{correct, correct, notPresent, notPresent, notPresent},
 	}
 	// guess3 := Guess{
 	// 	Word:          "STONE",
 	// 	LettersStatus: [NumLetters]Status{SamePosition, SamePosition, SamePosition, NotPresent, NotPresent},
 	// }
-	guess4 := Guess{
-		Word:          "STOMP",
-		Statuses: [NumLetters]LetterStatus{Correct, Correct, Correct, DiffPosition, NotPresent},
+	guess4 := guess{
+		word:     "STOMP",
+		statuses: [numLetters]letterStatus{correct, correct, correct, diffPosition, notPresent},
 	}
-	guess5 := Guess{
-		Word:          "STORM",
-		Statuses: [NumLetters]LetterStatus{Correct, Correct, Correct, Correct, Correct},
-	}
-
-	gameState := GameState{
-		Guesses:    []Guess{guess1, guess2, guess4, guess5},
-		CurrStatus: Won,
-		CurrGuess:  1,
+	guess5 := guess{
+		word:     "STORM",
+		statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
 	}
 
-	// In this case, called just to set the correct word for the test 
+	gameState := gameState{
+		guesses:    []guess{guess1, guess2, guess4, guess5},
+		currStatus: Won,
+		currGuess:  1,
+	}
+
+	// In this case, called just to set the correct word for the test
 	InitGameState(todaysWord)
 
 	err := gameState.printGame()

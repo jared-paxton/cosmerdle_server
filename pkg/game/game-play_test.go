@@ -6,41 +6,41 @@ import (
 
 func TestCheckGuess(t *testing.T) {
 	// Correct guess
-	guess1 := Guess{
-		Word:     "BLAST",
-		Statuses: [NumLetters]LetterStatus{NotPresent, NotPresent, NotPresent, DiffPosition, NotPresent},
+	guess1 := guess{
+		word:     "BLAST",
+		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, diffPosition, notPresent},
 	}
 	if !guess1.isCorrect("BLAST") {
 		t.Error("guess is not correct")
 	}
 }
 
-func (g *Guess) equals(want *Guess, t *testing.T) bool {
+func (g *guess) equals(want *guess, t *testing.T) bool {
 	isEqual := true
-	if g.Word != want.Word {
-		t.Errorf("got %s for guess.Word, want %s", g.Word, want.Word)
+	if g.word != want.word {
+		t.Errorf("got %s for guess.Word, want %s", g.word, want.word)
 		isEqual = false
 	}
-	for i := range want.Statuses {
-		if g.Statuses[i] != want.Statuses[i] {
-			t.Errorf("got %d for g.LettersStatus[%d], want %d", g.Statuses[i], i, want.Statuses[i])
+	for i := range want.statuses {
+		if g.statuses[i] != want.statuses[i] {
+			t.Errorf("got %d for g.LettersStatus[%d], want %d", g.statuses[i], i, want.statuses[i])
 			isEqual = false
 		}
 	}
 	return isEqual
 }
 
-func (gs *GameState) equals(want *GameState, t *testing.T) bool {
+func (gs *gameState) equals(want *gameState, t *testing.T) bool {
 	isEqual := true
-	for i := range want.Guesses {
-		isEqual = gs.Guesses[i].equals(&want.Guesses[i], t)
+	for i := range want.guesses {
+		isEqual = gs.guesses[i].equals(&want.guesses[i], t)
 	}
-	if gs.CurrStatus != want.CurrStatus {
-		t.Errorf("got %d for CurrStatus, want %d", gs.CurrStatus, want.CurrStatus)
+	if gs.currStatus != want.currStatus {
+		t.Errorf("got %d for CurrStatus, want %d", gs.currStatus, want.currStatus)
 		isEqual = false
 	}
-	if gs.CurrGuess != want.CurrGuess {
-		t.Errorf("got %d for CurrGuess, want %d", gs.CurrGuess, want.CurrGuess)
+	if gs.currGuess != want.currGuess {
+		t.Errorf("got %d for CurrGuess, want %d", gs.currGuess, want.currGuess)
 		isEqual = false
 	}
 
@@ -79,15 +79,15 @@ func TestMakeGuess(t *testing.T) {
 	// Correct guess
 	userWord := "BLAST"
 	MakeGuess(userWord, &gs)
-	want := GameState{
-		Guesses: []Guess{
+	want := gameState{
+		guesses: []guess{
 			{
-				Word:     userWord,
-				Statuses: [NumLetters]LetterStatus{Correct, Correct, Correct, Correct, Correct},
+				word:     userWord,
+				statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
 			},
 		},
-		CurrStatus: Won,
-		CurrGuess:  2,
+		currStatus: Won,
+		currGuess:  2,
 	}
 	gs.equals(&want, t)
 }
