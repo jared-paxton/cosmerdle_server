@@ -13,8 +13,8 @@ const (
 )
 
 type Guess struct {
-	Word          string
-	LettersStatus [NumLetters]LetterStatus
+	Word     string
+	Statuses [NumLetters]LetterStatus
 }
 
 type Status int

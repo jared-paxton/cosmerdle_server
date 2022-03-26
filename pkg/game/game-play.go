@@ -17,7 +17,7 @@ func InitGameState(word string) GameState {
 		CurrStatus: InProgress,
 		CurrGuess:  1,
 	}
-	correctWord = word
+	correctWord = strings.ToUpper(word)
 
 	return state
 }
@@ -27,8 +27,8 @@ func MakeGuess(userWord string, state *GameState) error {
 
 	// Default each letter to NotPresent
 	guess := Guess{
-		Word:          userWord,
-		LettersStatus: [NumLetters]LetterStatus{NotPresent, NotPresent, NotPresent, NotPresent, NotPresent},
+		Word:     userWord,
+		Statuses: [NumLetters]LetterStatus{NotPresent, NotPresent, NotPresent, NotPresent, NotPresent},
 	}
 
 	err := guess.isValid(state.CurrGuess)
@@ -77,7 +77,7 @@ func (g *Guess) isCorrect(correctWord string) bool {
 	correctGuess := true
 	for i := range g.Word {
 		if g.Word[i] == correctWord[i] {
-			g.LettersStatus[i] = Correct
+			g.Statuses[i] = Correct
 		} else {
 			correctGuess = false
 		}
@@ -85,7 +85,7 @@ func (g *Guess) isCorrect(correctWord string) bool {
 
 	letterRepresented := make(map[int]bool)
 	for i := range g.Word {
-		if g.LettersStatus[i] != Correct {
+		if g.Statuses[i] != Correct {
 			g.checkLetterPositions(i, correctWord, letterRepresented)
 		}
 	}
@@ -95,14 +95,14 @@ func (g *Guess) isCorrect(correctWord string) bool {
 
 func (g *Guess) checkLetterPositions(currPos int, correctWord string, lettersMap map[int]bool) {
 	for i := range correctWord {
-		if g.LettersStatus[i] == Correct || lettersMap[i] {
+		if g.Statuses[i] == Correct || lettersMap[i] {
 			continue
 		}
 		if g.Word[currPos] == correctWord[i] {
 			lettersMap[i] = true
-			g.LettersStatus[currPos] = DiffPosition
+			g.Statuses[currPos] = DiffPosition
 			return
 		}
 	}
-	g.LettersStatus[currPos] = NotPresent
+	g.Statuses[currPos] = NotPresent
 }

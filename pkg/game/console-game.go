@@ -6,7 +6,7 @@ import (
 	"github.com/jared-paxton/cosmerdle_server/pkg/db"
 )
 
-func StartGame() {
+func StartConsoleGame() {
 	todaysWord := db.GetWordOfTheDay()
 
 	state := InitGameState(todaysWord)
@@ -14,35 +14,35 @@ func StartGame() {
 	// Get Guesses from user
 	userGuess := "SALES"
 	MakeGuess(userGuess, &state)
-	printGame(&state, todaysWord)
+	state.printGame()
 	fmt.Println(todaysWord)
 	fmt.Println(state.CurrStatus)
 	fmt.Println(state.Guesses)
 
 	userGuess = "SSSSS"
 	MakeGuess(userGuess, &state)
-	printGame(&state, todaysWord)
+	state.printGame()
 	fmt.Println(todaysWord)
 	fmt.Println(state.CurrStatus)
 	fmt.Println(state.Guesses)
 
 	userGuess = "LLLLL"
 	MakeGuess(userGuess, &state)
-	printGame(&state, todaysWord)
+	state.printGame()
 	fmt.Println(todaysWord)
 	fmt.Println(state.CurrStatus)
 	fmt.Println(state.Guesses)
 
 	userGuess = "SLSLS"
 	MakeGuess(userGuess, &state)
-	printGame(&state, todaysWord)
+	state.printGame()
 	fmt.Println(todaysWord)
 	fmt.Println(state.CurrStatus)
 	fmt.Println(state.Guesses)
 
 	userGuess = "ADSEL"
 	MakeGuess(userGuess, &state)
-	printGame(&state, todaysWord)
+	state.printGame()
 	fmt.Println(todaysWord)
 	fmt.Println(state.CurrStatus)
 	fmt.Println(state.Guesses)
@@ -57,7 +57,7 @@ func StartGame() {
 
 	userGuess = "ladse"
 	MakeGuess(userGuess, &state)
-	printGame(&state, todaysWord)
+	state.printGame()
 	fmt.Println(todaysWord)
 	fmt.Println(state.CurrStatus)
 	fmt.Println(state.Guesses)
