@@ -1,17 +1,84 @@
 package game
 
 import (
+	"strings"
 	"testing"
 )
 
+// TestCheckGuess tests what a guess (specifically the statuses field) should look like
+// after making a guess
 func TestCheckGuess(t *testing.T) {
-	// Correct guess
-	guess1 := guess{
-		word:     "BLAST",
-		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, diffPosition, notPresent},
+	word := "TRAIT"
+	userWords := [4]string{"ptttp", "aittr", "blown", "trait"}
+	wantGuesses := [4]guess{
+		{
+			word:     strings.ToUpper(userWords[0]),
+			statuses: [numLetters]letterStatus{notPresent, diffPosition, diffPosition, notPresent, notPresent},
+		},
+		{
+			word:     strings.ToUpper(userWords[1]),
+			statuses: [numLetters]letterStatus{diffPosition, diffPosition, diffPosition, diffPosition, diffPosition},
+		},
+		{
+			word:     strings.ToUpper(userWords[2]),
+			statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+		},
+		{
+			word:     strings.ToUpper(userWords[3]),
+			statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
+		},
 	}
-	if !guess1.isCorrect("BLAST") {
-		t.Error("guess is not correct")
+
+	gs := InitGameState(word)
+
+	for i := range wantGuesses {
+		MakeGuess(userWords[i], &gs)
+		gs.guesses[i].equals(&wantGuesses[i], t)
+	}
+}
+
+// TestMakeGuess tests what the game state should be after making different guesses
+func TestMakeGuess(t *testing.T) {
+	word := "blast"
+
+	userWords := [3]string{"chore", "bares", word}
+	wantGuesses := [3]guess{
+		{
+			word:     strings.ToUpper(userWords[0]),
+			statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+		},
+		{
+			word:     strings.ToUpper(userWords[1]),
+			statuses: [numLetters]letterStatus{correct, diffPosition, notPresent, notPresent, diffPosition},
+		},
+		{
+			word:     strings.ToUpper(userWords[2]),
+			statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
+		},
+	}
+	wantGameStates := [3]gameState{
+		{
+			guesses:    []guess{},
+			currStatus: InProgress,
+			nextGuess:  2,
+		},
+		{
+			guesses:    []guess{wantGuesses[0], wantGuesses[1]},
+			currStatus: InProgress,
+			nextGuess:  3,
+		},
+		{
+			guesses:    []guess{wantGuesses[0], wantGuesses[1], wantGuesses[2]},
+			currStatus: Won,
+			nextGuess:  4,
+		},
+	}
+
+	gs := InitGameState(word)
+
+	for i := range wantGameStates {
+		MakeGuess(userWords[i], &gs)
+		gs.equals(&wantGameStates[i], t)
 	}
 }
 
@@ -23,7 +90,7 @@ func (g *guess) equals(want *guess, t *testing.T) bool {
 	}
 	for i := range want.statuses {
 		if g.statuses[i] != want.statuses[i] {
-			t.Errorf("got %d for g.LettersStatus[%d], want %d", g.statuses[i], i, want.statuses[i])
+			t.Errorf("got %d for g.LettersStatus[%d], want %d (guess word: %s)", g.statuses[i], i, want.statuses[i], g.word)
 			isEqual = false
 		}
 	}
@@ -39,55 +106,10 @@ func (gs *gameState) equals(want *gameState, t *testing.T) bool {
 		t.Errorf("got %d for CurrStatus, want %d", gs.currStatus, want.currStatus)
 		isEqual = false
 	}
-	if gs.currGuess != want.currGuess {
-		t.Errorf("got %d for CurrGuess, want %d", gs.currGuess, want.currGuess)
+	if gs.nextGuess != want.nextGuess {
+		t.Errorf("got %d for CurrGuess, want %d", gs.nextGuess, want.nextGuess)
 		isEqual = false
 	}
 
 	return isEqual
-}
-
-/*
-type GameState struct {
-	Guesses    []Guess
-	CurrStatus Status
-	CurrGuess  int
-}
-
-type Guess struct {
-	Word          string
-	LettersStatus [NumLetters]LetterStatus
-}
-
-*/
-
-func TestMakeGuess(t *testing.T) {
-
-	gs := InitGameState("blast")
-
-	// var tests = []struct {
-	//     a, b int
-	//     want int
-	// }{
-	//     {0, 1, 0},
-	//     {1, 0, 0},
-	//     {2, -2, -2},
-	//     {0, -1, -1},
-	//     {-1, 0, -1},
-	// }
-
-	// Correct guess
-	userWord := "BLAST"
-	MakeGuess(userWord, &gs)
-	want := gameState{
-		guesses: []guess{
-			{
-				word:     userWord,
-				statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
-			},
-		},
-		currStatus: Won,
-		currGuess:  2,
-	}
-	gs.equals(&want, t)
 }

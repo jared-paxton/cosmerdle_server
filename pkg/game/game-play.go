@@ -15,7 +15,7 @@ func InitGameState(word string) gameState {
 	state := gameState{
 		guesses:    make([]guess, maxGuesses),
 		currStatus: InProgress,
-		currGuess:  1,
+		nextGuess:  1,
 	}
 	correctWord = strings.ToUpper(word)
 
@@ -31,7 +31,7 @@ func MakeGuess(userWord string, state *gameState) error {
 		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 	}
 
-	err := guess.isValid(state.currGuess)
+	err := guess.isValid(state.nextGuess)
 	if err != nil {
 		return err
 	}
@@ -44,19 +44,19 @@ func MakeGuess(userWord string, state *gameState) error {
 }
 
 func (gs *gameState) addGuess(guess guess) {
-	gs.guesses[gs.currGuess-1] = guess
+	gs.guesses[gs.nextGuess-1] = guess
 }
 
 func (gs *gameState) updateGameStatus(correctguess bool) {
 	if correctguess {
 		gs.currStatus = Won
-	} else if gs.currGuess == maxGuesses {
+	} else if gs.nextGuess == maxGuesses {
 		gs.currStatus = Lost
 	} else {
 		gs.currStatus = InProgress
 	}
 
-	gs.currGuess++
+	gs.nextGuess++
 }
 
 func (g *guess) isValid(currguess int) error {

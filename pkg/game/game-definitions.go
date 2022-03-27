@@ -25,10 +25,11 @@ const (
 	Lost       gameStatus = 2
 )
 
+// correctWord stores the word of the day
 var correctWord string
 
 type gameState struct {
 	guesses    []guess
 	currStatus gameStatus
-	currGuess  int
+	nextGuess  int
 }
