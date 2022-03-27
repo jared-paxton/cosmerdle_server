@@ -21,7 +21,7 @@ func printEmptyRow(rowNum int, printMarker bool) {
 	fmt.Println()
 }
 
-// print prints each letter of the word in a "table row" like format, a letter per "cell".
+// printRow prints each letter of the word in a "table row" like format, a letter per "cell".
 func (g *guess) printRow(rowNum int) error {
 	if len(g.word) != numLetters {
 		return errors.New("wrong number of letters: cannot print row")
@@ -87,6 +87,7 @@ func printBoard(guesses []guess) error {
 	return nil
 }
 
+// printGame prints the game and game board at the current state
 func (gs *gameState) printGame() error {
 	fmt.Println("\n-------------------------------------------")
 	err := printBoard(gs.guesses)
