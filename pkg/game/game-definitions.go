@@ -31,5 +31,5 @@ var correctWord string
 type gameState struct {
 	guesses    []guess
 	currStatus gameStatus
-	nextGuess  int
+	currGuess  int
 }

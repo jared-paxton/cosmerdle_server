@@ -5,19 +5,56 @@ import (
 	"testing"
 )
 
-// TestCheckGuess tests what a guess (specifically the statuses field) should look like
-// after making a guess
-func TestCheckGuess(t *testing.T) {
-	word := "TRAIT"
-	userWords := [4]string{"ptttp", "aittr", "blown", "trait"}
-	wantGuesses := [4]guess{
+func TestIsValidWord(t *testing.T) {
+	testGuesses := [3]guess{
 		{
-			word:     strings.ToUpper(userWords[0]),
+			// Word too short
+			word:     strings.ToUpper("test"),
 			statuses: [numLetters]letterStatus{notPresent, diffPosition, diffPosition, notPresent, notPresent},
 		},
 		{
-			word:     strings.ToUpper(userWords[1]),
+			// Word too long
+			word:     strings.ToUpper("testing"),
 			statuses: [numLetters]letterStatus{diffPosition, diffPosition, diffPosition, diffPosition, diffPosition},
+		},
+		{
+			// Word not in bank
+			word:     strings.ToUpper("about"),
+			statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+		},
+	}
+
+	for _, guess := range testGuesses {
+		err := guess.isValid(1)
+		if err == nil {
+			t.Errorf("\"%s\"should be an invalid word (guess) because of : %s", guess.word, err)
+		}
+	}
+
+	// Word in bank, but test if the current guess is greater than allowed guesses
+	guess := guess{
+		word:     strings.ToUpper("storm"),
+		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+	}
+	err := guess.isValid(maxGuesses + 1)
+	if err == nil {
+		t.Error("should be an invalid word (guess) because of word isn't in bank", guess.word)
+	}
+}
+
+// TestCheckGuess tests what a guess (specifically the statuses field) should look like
+// after making a guess
+func TestCheckGuess(t *testing.T) {
+	word := "storm"
+	userWords := [4]string{"honor", "metal", "value", "storm"}
+	wantGuesses := [4]guess{
+		{
+			word:     strings.ToUpper(userWords[0]),
+			statuses: [numLetters]letterStatus{notPresent, diffPosition, notPresent, notPresent, diffPosition},
+		},
+		{
+			word:     strings.ToUpper(userWords[1]),
+			statuses: [numLetters]letterStatus{diffPosition, notPresent, diffPosition, notPresent, notPresent},
 		},
 		{
 			word:     strings.ToUpper(userWords[2]),
@@ -39,9 +76,9 @@ func TestCheckGuess(t *testing.T) {
 
 // TestMakeGuess tests what the game state should be after making different guesses
 func TestMakeGuess(t *testing.T) {
-	word := "blast"
+	word := "seons"
 
-	userWords := [3]string{"chore", "bares", word}
+	userWords := [3]string{"light", "moash", word}
 	wantGuesses := [3]guess{
 		{
 			word:     strings.ToUpper(userWords[0]),
@@ -49,7 +86,7 @@ func TestMakeGuess(t *testing.T) {
 		},
 		{
 			word:     strings.ToUpper(userWords[1]),
-			statuses: [numLetters]letterStatus{correct, diffPosition, notPresent, notPresent, diffPosition},
+			statuses: [numLetters]letterStatus{notPresent, diffPosition, notPresent, diffPosition, notPresent},
 		},
 		{
 			word:     strings.ToUpper(userWords[2]),
@@ -58,26 +95,29 @@ func TestMakeGuess(t *testing.T) {
 	}
 	wantGameStates := [3]gameState{
 		{
-			guesses:    []guess{},
+			guesses:    []guess{wantGuesses[0]},
 			currStatus: InProgress,
-			nextGuess:  2,
+			currGuess:  2,
 		},
 		{
 			guesses:    []guess{wantGuesses[0], wantGuesses[1]},
 			currStatus: InProgress,
-			nextGuess:  3,
+			currGuess:  3,
 		},
 		{
 			guesses:    []guess{wantGuesses[0], wantGuesses[1], wantGuesses[2]},
 			currStatus: Won,
-			nextGuess:  4,
+			currGuess:  4,
 		},
 	}
 
 	gs := InitGameState(word)
 
 	for i := range wantGameStates {
-		MakeGuess(userWords[i], &gs)
+		err := MakeGuess(userWords[i], &gs)
+		if err != nil {
+			t.Fatal(err.Error())
+		}
 		gs.equals(&wantGameStates[i], t)
 	}
 }
@@ -106,8 +146,8 @@ func (gs *gameState) equals(want *gameState, t *testing.T) bool {
 		t.Errorf("got %d for CurrStatus, want %d", gs.currStatus, want.currStatus)
 		isEqual = false
 	}
-	if gs.nextGuess != want.nextGuess {
-		t.Errorf("got %d for CurrGuess, want %d", gs.nextGuess, want.nextGuess)
+	if gs.currGuess != want.currGuess {
+		t.Errorf("got %d for CurrGuess, want %d", gs.currGuess, want.currGuess)
 		isEqual = false
 	}
 

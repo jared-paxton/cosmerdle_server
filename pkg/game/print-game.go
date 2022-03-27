@@ -66,31 +66,32 @@ func printStatusesRow(lettersStatus [numLetters]letterStatus) {
 }
 
 // PrintBoard prints the game board to the terminal in an understandable format.
-func printBoard(guesses []guess) error {
+func (gs *gameState) printBoard() error {
 	var err error
-	for i, guess := range guesses {
-		err = guess.printRow(i + 1)
+	for i := 0; i < gs.currGuess-1; i++ {
+		err = gs.guesses[i].printRow(i + 1)
 		if err != nil {
 			return err
 		}
-		printStatusesRow(guess.statuses)
+		printStatusesRow(gs.guesses[i].statuses)
 		fmt.Println()
 	}
 
 	printCurrMarker := true
-	printedRows := len(guesses)
+	printedRows := gs.currGuess - 1
 	for printedRows < maxGuesses {
 		printEmptyRow(printedRows+1, printCurrMarker)
 		printCurrMarker = false
 		printedRows++
 	}
+
 	return nil
 }
 
 // printGame prints the game and game board at the current state
 func (gs *gameState) printGame() error {
 	fmt.Println("\n-------------------------------------------")
-	err := printBoard(gs.guesses)
+	err := gs.printBoard()
 	if err != nil {
 		return err
 	}
