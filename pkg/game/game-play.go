@@ -3,15 +3,13 @@ package game
 import (
 	"errors"
 	"strings"
-
-	"github.com/jared-paxton/cosmerdle_server/pkg/db"
 )
 
-func GetCorrectWord() string {
+func getCorrectWord() string {
 	return correctWord
 }
 
-func InitGameState(word string) gameState {
+func initGameState(word string) gameState {
 	state := gameState{
 		guesses:    make([]guess, maxGuesses),
 		currStatus: InProgress,
@@ -22,7 +20,7 @@ func InitGameState(word string) gameState {
 	return state
 }
 
-func MakeGuess(userWord string, state *gameState) error {
+func makeGuess(userWord string, state *gameState) error {
 	userWord = strings.ToUpper(userWord)
 
 	// Default each letter to NotPresent
@@ -64,7 +62,7 @@ func (g *guess) isValid(currGuess int) error {
 		return errors.New("exceeded max number of letters")
 	} else if len(g.word) < numLetters {
 		return errors.New("not enough letters in word")
-	} else if !db.IsWordInBank(g.word) {
+	} else if !IsWordInBank(g.word) {
 		return errors.New("word is not a part of the cosmere")
 	} else if currGuess > maxGuesses {
 		return errors.New("exceeded max number of guesses")

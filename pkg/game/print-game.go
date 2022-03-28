@@ -104,7 +104,7 @@ func (gs *gameState) printGame() error {
 		fmt.Println("              WON!!!")
 	case Lost:
 		fmt.Println("             LOST :'(")
-		fmt.Println("         Word is:", GetCorrectWord())
+		fmt.Println("         Word is:", getCorrectWord())
 	}
 	fmt.Println("-------------------------------------------")
 	fmt.Println()

@@ -35,7 +35,7 @@ func TestPrintGame(t *testing.T) {
 	}
 
 	// In this case, called just to set the correct word for the test
-	InitGameState(todaysWord)
+	initGameState(todaysWord)
 
 	err := gameState.printGame()
 	if err != nil {

@@ -1,4 +1,4 @@
-package db
+package game
 
 import (
 	"math/rand"
@@ -13,7 +13,6 @@ func getRandomNumber(min int, max int) int {
 
 var wordBank = []string{
 	"storm",
-	"value",
 	"light",
 	"moash",
 	"seons",

@@ -66,10 +66,10 @@ func TestCheckGuess(t *testing.T) {
 		},
 	}
 
-	gs := InitGameState(word)
+	gs := initGameState(word)
 
 	for i := range wantGuesses {
-		MakeGuess(userWords[i], &gs)
+		makeGuess(userWords[i], &gs)
 		gs.guesses[i].equals(&wantGuesses[i], t)
 	}
 }
@@ -111,10 +111,10 @@ func TestMakeGuess(t *testing.T) {
 		},
 	}
 
-	gs := InitGameState(word)
+	gs := initGameState(word)
 
 	for i := range wantGameStates {
-		err := MakeGuess(userWords[i], &gs)
+		err := makeGuess(userWords[i], &gs)
 		if err != nil {
 			t.Fatal(err.Error())
 		}

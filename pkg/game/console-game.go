@@ -6,8 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/jared-paxton/cosmerdle_server/pkg/db"
 )
 
 func printGameIntro() {
@@ -27,8 +25,8 @@ func printGameIntro() {
 func StartConsoleGame() {
 	printGameIntro()
 
-	todaysWord := db.GetWordOfTheDay()
-	gs := InitGameState(todaysWord)
+	todaysWord := GetWordOfTheDay()
+	gs := initGameState(todaysWord)
 
 	for gs.currStatus == InProgress {
 		fmt.Printf("Enter guess #%d (or enter 9 to quit): ", gs.currGuess)
@@ -49,7 +47,7 @@ func StartConsoleGame() {
 			break
 		}
 
-		err = MakeGuess(word, &gs)
+		err = makeGuess(word, &gs)
 		if err != nil {
 			fmt.Println("error: ", err.Error())
 		} else {
