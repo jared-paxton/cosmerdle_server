@@ -9,9 +9,9 @@ func getCorrectWord() string {
 	return correctWord
 }
 
-func initGameState(word string) gameState {
-	state := gameState{
-		guesses:    make([]guess, maxGuesses),
+func initGameState(word string) *gameState {
+	state := &gameState{
+		guesses:    []guess{},
 		currStatus: InProgress,
 		currGuess:  1,
 	}
@@ -20,7 +20,7 @@ func initGameState(word string) gameState {
 	return state
 }
 
-func makeGuess(userWord string, state *gameState) error {
+func (gs *gameState) makeGuess(userWord string) error {
 	userWord = strings.ToUpper(userWord)
 
 	// Default each letter to NotPresent
@@ -29,20 +29,20 @@ func makeGuess(userWord string, state *gameState) error {
 		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 	}
 
-	err := guess.isValid(state.currGuess)
+	err := guess.isValid(gs.currGuess)
 	if err != nil {
 		return err
 	}
 
 	correctguess := guess.isCorrect(correctWord)
-	state.addGuess(guess)
-	state.updateGameStatus(correctguess)
+	gs.addGuess(guess)
+	gs.updateGameStatus(correctguess)
 
 	return nil
 }
 
 func (gs *gameState) addGuess(guess guess) {
-	gs.guesses[gs.currGuess-1] = guess
+	gs.guesses = append(gs.guesses, guess)
 }
 
 func (gs *gameState) updateGameStatus(correctGuess bool) {

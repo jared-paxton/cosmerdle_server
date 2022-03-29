@@ -13,6 +13,7 @@ func getRandomNumber(min int, max int) int {
 
 var wordBank = []string{
 	"storm",
+	"elend",
 	"light",
 	"moash",
 	"seons",

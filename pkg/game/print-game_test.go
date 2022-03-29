@@ -31,7 +31,7 @@ func TestPrintGame(t *testing.T) {
 	gameState := gameState{
 		guesses:    []guess{guess1, guess2, guess4, guess5},
 		currStatus: Won,
-		currGuess:  1,
+		currGuess:  5,
 	}
 
 	// In this case, called just to set the correct word for the test

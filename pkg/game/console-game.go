@@ -47,7 +47,7 @@ func StartConsoleGame() {
 			break
 		}
 
-		err = makeGuess(word, &gs)
+		err = gs.makeGuess(word)
 		if err != nil {
 			fmt.Println("error: ", err.Error())
 		} else {

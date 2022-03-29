@@ -1,12 +1,13 @@
 package game
 
-
-func StartGame() {
+func StartGame() *gameState {
 	todaysWord := GetWordOfTheDay()
 
 	state := initGameState(todaysWord)
 
-	// Get Guesses from user
-	userGuess := "FASIL"
-	makeGuess(userGuess, &state)
+	// // Get Guesses from user
+	// userGuess := "FASIL"
+	// state.makeGuess(userGuess)
+
+	return state
 }
