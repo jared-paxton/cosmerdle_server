@@ -1,23 +1,14 @@
-package api
+package app
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/jared-paxton/cosmerdle_server/pkg/game"
 )
 
-func (srv *application) routes() http.Handler {
-	router := chi.NewRouter()
-
-	router.Get("/start", startGame)
-
-	return router
-}
-
-func startGame(w http.ResponseWriter, r *http.Request) {
+func (app *application) startGame(w http.ResponseWriter, r *http.Request) {
 	gameState := game.StartGame()
 
 	response := map[string]interface{}{
@@ -25,7 +16,14 @@ func startGame(w http.ResponseWriter, r *http.Request) {
 		"data":   gameState,
 	}
 
-	js, err := json.MarshalIndent(response, "", "    ")
+	var js []byte
+	var err error
+	if app.config.Env == "development" {
+		js, err = json.MarshalIndent(response, "", "    ")
+	} else {
+		js, err = json.Marshal(response)
+	}
+
 	if err != nil {
 		fmt.Println("error")
 	}

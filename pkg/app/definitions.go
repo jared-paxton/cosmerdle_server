@@ -1,15 +1,18 @@
-package api
+package app
 
 import (
-	"database/sql"
 	"log"
 
 	"github.com/jared-paxton/cosmerdle_server/pkg/game"
 )
 
 type Config struct {
-	Port int
-    Database *sql.DB
+    Port int
+    Env string
+    Database struct {
+        DSN string
+        Driver string
+    }
 }
 
 type application struct {
