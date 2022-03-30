@@ -3,17 +3,15 @@ package game
 import (
 	"errors"
 	"strings"
-
-	"github.com/jared-paxton/cosmerdle_server/pkg/db"
 )
 
-func GetCorrectWord() string {
+func getCorrectWord() string {
 	return correctWord
 }
 
-func InitGameState(word string) gameState {
-	state := gameState{
-		guesses:    make([]guess, maxGuesses),
+func initGameState(word string) *gameState {
+	state := &gameState{
+		guesses:    []guess{},
 		currStatus: InProgress,
 		currGuess:  1,
 	}
@@ -22,7 +20,7 @@ func InitGameState(word string) gameState {
 	return state
 }
 
-func MakeGuess(userWord string, state *gameState) error {
+func (gs *gameState) makeGuess(userWord string) error {
 	userWord = strings.ToUpper(userWord)
 
 	// Default each letter to NotPresent
@@ -31,20 +29,20 @@ func MakeGuess(userWord string, state *gameState) error {
 		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 	}
 
-	err := guess.isValid(state.currGuess)
+	err := guess.isValid(gs.currGuess)
 	if err != nil {
 		return err
 	}
 
 	correctguess := guess.isCorrect(correctWord)
-	state.addGuess(guess)
-	state.updateGameStatus(correctguess)
+	gs.addGuess(guess)
+	gs.updateGameStatus(correctguess)
 
 	return nil
 }
 
 func (gs *gameState) addGuess(guess guess) {
-	gs.guesses[gs.currGuess-1] = guess
+	gs.guesses = append(gs.guesses, guess)
 }
 
 func (gs *gameState) updateGameStatus(correctGuess bool) {
@@ -64,7 +62,7 @@ func (g *guess) isValid(currGuess int) error {
 		return errors.New("exceeded max number of letters")
 	} else if len(g.word) < numLetters {
 		return errors.New("not enough letters in word")
-	} else if !db.IsWordInBank(g.word) {
+	} else if !IsWordInBank(g.word) {
 		return errors.New("word is not a part of the cosmere")
 	} else if currGuess > maxGuesses {
 		return errors.New("exceeded max number of guesses")

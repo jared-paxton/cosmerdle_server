@@ -6,8 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/jared-paxton/cosmerdle_server/pkg/db"
 )
 
 func printGameIntro() {
@@ -27,8 +25,8 @@ func printGameIntro() {
 func StartConsoleGame() {
 	printGameIntro()
 
-	todaysWord := db.GetWordOfTheDay()
-	gs := InitGameState(todaysWord)
+	todaysWord := GetWordOfTheDay()
+	gs := initGameState(todaysWord)
 
 	for gs.currStatus == InProgress {
 		fmt.Printf("Enter guess #%d (or enter 9 to quit): ", gs.currGuess)
@@ -49,7 +47,7 @@ func StartConsoleGame() {
 			break
 		}
 
-		err = MakeGuess(word, &gs)
+		err = gs.makeGuess(word)
 		if err != nil {
 			fmt.Println("error: ", err.Error())
 		} else {
@@ -60,57 +58,4 @@ func StartConsoleGame() {
 			fmt.Println("error: ", err)
 		}
 	}
-
-	// fmt.Printf("Enter Guess: ")
-
-	// // Get Guesses from user
-	// userGuess := "SALES"
-	// MakeGuess(userGuess, &state)
-	// state.printGame()
-	// fmt.Println(todaysWord)
-	// fmt.Println(state.currStatus)
-	// fmt.Println(state.guesses)
-
-	// userGuess = "SSSSS"
-	// MakeGuess(userGuess, &state)
-	// state.printGame()
-	// fmt.Println(todaysWord)
-	// fmt.Println(state.currStatus)
-	// fmt.Println(state.guesses)
-
-	// userGuess = "LLLLL"
-	// MakeGuess(userGuess, &state)
-	// state.printGame()
-	// fmt.Println(todaysWord)
-	// fmt.Println(state.currStatus)
-	// fmt.Println(state.guesses)
-
-	// userGuess = "SLSLS"
-	// MakeGuess(userGuess, &state)
-	// state.printGame()
-	// fmt.Println(todaysWord)
-	// fmt.Println(state.currStatus)
-	// fmt.Println(state.guesses)
-
-	// userGuess = "ADSEL"
-	// MakeGuess(userGuess, &state)
-	// state.printGame()
-	// fmt.Println(todaysWord)
-	// fmt.Println(state.currStatus)
-	// fmt.Println(state.guesses)
-
-	// userGuess = "LADSS"
-	// MakeGuess(userGuess, &state)
-	// state.printGame()
-	// fmt.Println(todaysWord)
-	// fmt.Println(state.currStatus)
-	// fmt.Println(state.guesses)
-
-	// userGuess = "ladse"
-	// MakeGuess(userGuess, &state)
-	// state.printGame()
-	// fmt.Println(todaysWord)
-	// fmt.Println(state.currStatus)
-	// fmt.Println(state.guesses)
-
 }

@@ -46,7 +46,7 @@ func TestIsValidWord(t *testing.T) {
 // after making a guess
 func TestCheckGuess(t *testing.T) {
 	word := "storm"
-	userWords := [4]string{"honor", "metal", "value", "storm"}
+	userWords := [4]string{"honor", "metal", "elend", "storm"}
 	wantGuesses := [4]guess{
 		{
 			word:     strings.ToUpper(userWords[0]),
@@ -66,10 +66,10 @@ func TestCheckGuess(t *testing.T) {
 		},
 	}
 
-	gs := InitGameState(word)
+	gs := initGameState(word)
 
 	for i := range wantGuesses {
-		MakeGuess(userWords[i], &gs)
+		gs.makeGuess(userWords[i])
 		gs.guesses[i].equals(&wantGuesses[i], t)
 	}
 }
@@ -111,10 +111,10 @@ func TestMakeGuess(t *testing.T) {
 		},
 	}
 
-	gs := InitGameState(word)
+	gs := initGameState(word)
 
 	for i := range wantGameStates {
-		err := MakeGuess(userWords[i], &gs)
+		err := gs.makeGuess(userWords[i])
 		if err != nil {
 			t.Fatal(err.Error())
 		}
