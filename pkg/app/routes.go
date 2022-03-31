@@ -9,7 +9,10 @@ import (
 func (app *application) routes() http.Handler {
 	router := chi.NewRouter()
 
-	router.Get("/start", app.startGame)
+	// Middleware
+	useCORS(router)
+
+	router.Get("/", app.accessGame)
 
 	return router
 }

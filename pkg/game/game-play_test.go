@@ -9,36 +9,36 @@ func TestIsValidWord(t *testing.T) {
 	testGuesses := [3]guess{
 		{
 			// Word too short
-			word:     strings.ToUpper("test"),
-			statuses: [numLetters]letterStatus{notPresent, diffPosition, diffPosition, notPresent, notPresent},
+			Word:     strings.ToUpper("test"),
+			Statuses: [numLetters]letterStatus{notPresent, diffPosition, diffPosition, notPresent, notPresent},
 		},
 		{
 			// Word too long
-			word:     strings.ToUpper("testing"),
-			statuses: [numLetters]letterStatus{diffPosition, diffPosition, diffPosition, diffPosition, diffPosition},
+			Word:     strings.ToUpper("testing"),
+			Statuses: [numLetters]letterStatus{diffPosition, diffPosition, diffPosition, diffPosition, diffPosition},
 		},
 		{
 			// Word not in bank
-			word:     strings.ToUpper("about"),
-			statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+			Word:     strings.ToUpper("about"),
+			Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 		},
 	}
 
 	for _, guess := range testGuesses {
 		err := guess.isValid(1)
 		if err == nil {
-			t.Errorf("\"%s\"should be an invalid word (guess) because of : %s", guess.word, err)
+			t.Errorf("\"%s\"should be an invalid word (guess) because of : %s", guess.Word, err)
 		}
 	}
 
 	// Word in bank, but test if the current guess is greater than allowed guesses
 	guess := guess{
-		word:     strings.ToUpper("storm"),
-		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+		Word:     strings.ToUpper("storm"),
+		Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 	}
 	err := guess.isValid(maxGuesses + 1)
 	if err == nil {
-		t.Error("should be an invalid word (guess) because of word isn't in bank", guess.word)
+		t.Error("should be an invalid word (guess) because of word isn't in bank", guess.Word)
 	}
 }
 
@@ -49,20 +49,20 @@ func TestCheckGuess(t *testing.T) {
 	userWords := [4]string{"honor", "metal", "elend", "storm"}
 	wantGuesses := [4]guess{
 		{
-			word:     strings.ToUpper(userWords[0]),
-			statuses: [numLetters]letterStatus{notPresent, diffPosition, notPresent, notPresent, diffPosition},
+			Word:     strings.ToUpper(userWords[0]),
+			Statuses: [numLetters]letterStatus{notPresent, diffPosition, notPresent, notPresent, diffPosition},
 		},
 		{
-			word:     strings.ToUpper(userWords[1]),
-			statuses: [numLetters]letterStatus{diffPosition, notPresent, diffPosition, notPresent, notPresent},
+			Word:     strings.ToUpper(userWords[1]),
+			Statuses: [numLetters]letterStatus{diffPosition, notPresent, diffPosition, notPresent, notPresent},
 		},
 		{
-			word:     strings.ToUpper(userWords[2]),
-			statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+			Word:     strings.ToUpper(userWords[2]),
+			Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 		},
 		{
-			word:     strings.ToUpper(userWords[3]),
-			statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
+			Word:     strings.ToUpper(userWords[3]),
+			Statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
 		},
 	}
 
@@ -70,7 +70,7 @@ func TestCheckGuess(t *testing.T) {
 
 	for i := range wantGuesses {
 		gs.makeGuess(userWords[i])
-		gs.guesses[i].equals(&wantGuesses[i], t)
+		gs.Guesses[i].equals(&wantGuesses[i], t)
 	}
 }
 
@@ -81,33 +81,33 @@ func TestMakeGuess(t *testing.T) {
 	userWords := [3]string{"light", "moash", word}
 	wantGuesses := [3]guess{
 		{
-			word:     strings.ToUpper(userWords[0]),
-			statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+			Word:     strings.ToUpper(userWords[0]),
+			Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 		},
 		{
-			word:     strings.ToUpper(userWords[1]),
-			statuses: [numLetters]letterStatus{notPresent, diffPosition, notPresent, diffPosition, notPresent},
+			Word:     strings.ToUpper(userWords[1]),
+			Statuses: [numLetters]letterStatus{notPresent, diffPosition, notPresent, diffPosition, notPresent},
 		},
 		{
-			word:     strings.ToUpper(userWords[2]),
-			statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
+			Word:     strings.ToUpper(userWords[2]),
+			Statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
 		},
 	}
 	wantGameStates := [3]gameState{
 		{
-			guesses:    []guess{wantGuesses[0]},
-			currStatus: InProgress,
-			currGuess:  2,
+			Guesses:    []guess{wantGuesses[0]},
+			CurrStatus: InProgress,
+			CurrGuess:  2,
 		},
 		{
-			guesses:    []guess{wantGuesses[0], wantGuesses[1]},
-			currStatus: InProgress,
-			currGuess:  3,
+			Guesses:    []guess{wantGuesses[0], wantGuesses[1]},
+			CurrStatus: InProgress,
+			CurrGuess:  3,
 		},
 		{
-			guesses:    []guess{wantGuesses[0], wantGuesses[1], wantGuesses[2]},
-			currStatus: Won,
-			currGuess:  4,
+			Guesses:    []guess{wantGuesses[0], wantGuesses[1], wantGuesses[2]},
+			CurrStatus: Won,
+			CurrGuess:  4,
 		},
 	}
 
@@ -124,13 +124,13 @@ func TestMakeGuess(t *testing.T) {
 
 func (g *guess) equals(want *guess, t *testing.T) bool {
 	isEqual := true
-	if g.word != want.word {
-		t.Errorf("got %s for guess.Word, want %s", g.word, want.word)
+	if g.Word != want.Word {
+		t.Errorf("got %s for guess.Word, want %s", g.Word, want.Word)
 		isEqual = false
 	}
-	for i := range want.statuses {
-		if g.statuses[i] != want.statuses[i] {
-			t.Errorf("got %d for g.LettersStatus[%d], want %d (guess word: %s)", g.statuses[i], i, want.statuses[i], g.word)
+	for i := range want.Statuses {
+		if g.Statuses[i] != want.Statuses[i] {
+			t.Errorf("got %d for g.LettersStatus[%d], want %d (guess word: %s)", g.Statuses[i], i, want.Statuses[i], g.Word)
 			isEqual = false
 		}
 	}
@@ -139,15 +139,15 @@ func (g *guess) equals(want *guess, t *testing.T) bool {
 
 func (gs *gameState) equals(want *gameState, t *testing.T) bool {
 	isEqual := true
-	for i := range want.guesses {
-		isEqual = gs.guesses[i].equals(&want.guesses[i], t)
+	for i := range want.Guesses {
+		isEqual = gs.Guesses[i].equals(&want.Guesses[i], t)
 	}
-	if gs.currStatus != want.currStatus {
-		t.Errorf("got %d for CurrStatus, want %d", gs.currStatus, want.currStatus)
+	if gs.CurrStatus != want.CurrStatus {
+		t.Errorf("got %d for CurrStatus, want %d", gs.CurrStatus, want.CurrStatus)
 		isEqual = false
 	}
-	if gs.currGuess != want.currGuess {
-		t.Errorf("got %d for CurrGuess, want %d", gs.currGuess, want.currGuess)
+	if gs.CurrGuess != want.CurrGuess {
+		t.Errorf("got %d for CurrGuess, want %d", gs.CurrGuess, want.CurrGuess)
 		isEqual = false
 	}
 

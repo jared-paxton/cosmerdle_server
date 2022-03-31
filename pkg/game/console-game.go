@@ -28,8 +28,8 @@ func StartConsoleGame() {
 	todaysWord := GetWordOfTheDay()
 	gs := initGameState(todaysWord)
 
-	for gs.currStatus == InProgress {
-		fmt.Printf("Enter guess #%d (or enter 9 to quit): ", gs.currGuess)
+	for gs.CurrStatus == InProgress {
+		fmt.Printf("Enter guess #%d (or enter 9 to quit): ", gs.CurrGuess)
 		var reader = bufio.NewReader(os.Stdin)
 		input, err := reader.ReadString('\n')
 		if err != nil {

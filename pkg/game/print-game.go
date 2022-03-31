@@ -23,16 +23,16 @@ func printEmptyRow(rowNum int, printMarker bool) {
 
 // printRow prints each letter of the word in a "table row" like format, a letter per "cell".
 func (g *guess) printRow(rowNum int) error {
-	if len(g.word) != numLetters {
+	if len(g.Word) != numLetters {
 		return errors.New("wrong number of letters: cannot print row")
 	}
 
 	fmt.Printf("    %d |", rowNum)
-	for i := 0; i < len(g.word); i++ {
-		if i == len(g.word)-1 {
-			fmt.Printf("  %c  |", g.word[i])
+	for i := 0; i < len(g.Word); i++ {
+		if i == len(g.Word)-1 {
+			fmt.Printf("  %c  |", g.Word[i])
 		} else {
-			fmt.Printf("  %c   ", g.word[i])
+			fmt.Printf("  %c   ", g.Word[i])
 		}
 	}
 	fmt.Println()
@@ -68,17 +68,17 @@ func printStatusesRow(lettersStatus [numLetters]letterStatus) {
 // PrintBoard prints the game board to the terminal in an understandable format.
 func (gs *gameState) printBoard() error {
 	var err error
-	for i := 0; i < gs.currGuess-1; i++ {
-		err = gs.guesses[i].printRow(i + 1)
+	for i := 0; i < len(gs.Guesses); i++ {
+		err = gs.Guesses[i].printRow(i + 1)
 		if err != nil {
 			return err
 		}
-		printStatusesRow(gs.guesses[i].statuses)
+		printStatusesRow(gs.Guesses[i].Statuses)
 		fmt.Println()
 	}
 
 	printCurrMarker := true
-	printedRows := gs.currGuess - 1
+	printedRows := len(gs.Guesses)
 	for printedRows < maxGuesses {
 		printEmptyRow(printedRows+1, printCurrMarker)
 		printCurrMarker = false
@@ -97,7 +97,7 @@ func (gs *gameState) printGame() error {
 	}
 
 	fmt.Println("-------------------------------------------")
-	switch gs.currStatus {
+	switch gs.CurrStatus {
 	case InProgress:
 		fmt.Println("           IN PROGRESS")
 	case Won:

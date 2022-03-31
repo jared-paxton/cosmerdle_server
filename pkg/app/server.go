@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -60,8 +61,11 @@ func setupDatabase(driver string, connString string) (*sql.DB, error) {
 		return nil, err
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	// ping the DB to ensure that it is connected
-	err = db.Ping()
+	err = db.PingContext(ctx)
 
 	if err != nil {
 		return nil, err
