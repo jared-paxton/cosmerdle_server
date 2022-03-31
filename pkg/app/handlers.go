@@ -1,34 +1,18 @@
 package app
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/jared-paxton/cosmerdle_server/pkg/game"
 )
 
-func (app *application) startGame(w http.ResponseWriter, r *http.Request) {
+func (app *application) accessGame(w http.ResponseWriter, r *http.Request) {
+	//TODO: implement logic if user has already started game and is just resuming
 	gameState := game.StartGame()
 
-	response := map[string]interface{}{
-		"status": "success",
-		"data":   gameState,
-	}
-
-	var js []byte
-	var err error
-	if app.config.Env == "development" {
-		js, err = json.MarshalIndent(response, "", "    ")
-	} else {
-		js, err = json.Marshal(response)
-	}
+	err := app.writeJSON(w, 200, gameState, "game_state")
 
 	if err != nil {
-		fmt.Println("error")
+		app.logger.Println("could not send accessGame response due to:", err)
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
 }

@@ -11,9 +11,9 @@ func getCorrectWord() string {
 
 func initGameState(word string) *gameState {
 	state := &gameState{
-		guesses:    []guess{},
-		currStatus: InProgress,
-		currGuess:  1,
+		Guesses:    []guess{},
+		CurrStatus: InProgress,
+		CurrGuess:  1,
 	}
 	correctWord = strings.ToUpper(word)
 
@@ -25,11 +25,11 @@ func (gs *gameState) makeGuess(userWord string) error {
 
 	// Default each letter to NotPresent
 	guess := guess{
-		word:     userWord,
-		statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+		Word:     userWord,
+		Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 	}
 
-	err := guess.isValid(gs.currGuess)
+	err := guess.isValid(gs.CurrGuess)
 	if err != nil {
 		return err
 	}
@@ -42,27 +42,27 @@ func (gs *gameState) makeGuess(userWord string) error {
 }
 
 func (gs *gameState) addGuess(guess guess) {
-	gs.guesses = append(gs.guesses, guess)
+	gs.Guesses = append(gs.Guesses, guess)
 }
 
 func (gs *gameState) updateGameStatus(correctGuess bool) {
 	if correctGuess {
-		gs.currStatus = Won
-	} else if gs.currGuess >= maxGuesses {
-		gs.currStatus = Lost
+		gs.CurrStatus = Won
+	} else if gs.CurrGuess >= maxGuesses {
+		gs.CurrStatus = Lost
 	} else {
-		gs.currStatus = InProgress
+		gs.CurrStatus = InProgress
 	}
 
-	gs.currGuess++
+	gs.CurrGuess++
 }
 
 func (g *guess) isValid(currGuess int) error {
-	if len(g.word) > numLetters {
+	if len(g.Word) > numLetters {
 		return errors.New("exceeded max number of letters")
-	} else if len(g.word) < numLetters {
+	} else if len(g.Word) < numLetters {
 		return errors.New("not enough letters in word")
-	} else if !IsWordInBank(g.word) {
+	} else if !IsWordInBank(g.Word) {
 		return errors.New("word is not a part of the cosmere")
 	} else if currGuess > maxGuesses {
 		return errors.New("exceeded max number of guesses")
@@ -73,17 +73,17 @@ func (g *guess) isValid(currGuess int) error {
 
 func (g *guess) isCorrect(correctWord string) bool {
 	correctguess := true
-	for i := range g.word {
-		if g.word[i] == correctWord[i] {
-			g.statuses[i] = correct
+	for i := range g.Word {
+		if g.Word[i] == correctWord[i] {
+			g.Statuses[i] = correct
 		} else {
 			correctguess = false
 		}
 	}
 
 	letterRepresented := make(map[int]bool)
-	for i := range g.word {
-		if g.statuses[i] != correct {
+	for i := range g.Word {
+		if g.Statuses[i] != correct {
 			g.checkLetterPositions(i, correctWord, letterRepresented)
 		}
 	}
@@ -93,14 +93,14 @@ func (g *guess) isCorrect(correctWord string) bool {
 
 func (g *guess) checkLetterPositions(currPos int, correctWord string, lettersMap map[int]bool) {
 	for i := range correctWord {
-		if g.statuses[i] == correct || lettersMap[i] {
+		if g.Statuses[i] == correct || lettersMap[i] {
 			continue
 		}
-		if g.word[currPos] == correctWord[i] {
+		if g.Word[currPos] == correctWord[i] {
 			lettersMap[i] = true
-			g.statuses[currPos] = diffPosition
+			g.Statuses[currPos] = diffPosition
 			return
 		}
 	}
-	g.statuses[currPos] = notPresent
+	g.Statuses[currPos] = notPresent
 }

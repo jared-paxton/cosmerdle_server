@@ -13,8 +13,8 @@ const (
 )
 
 type guess struct {
-	word     string
-	statuses [numLetters]letterStatus
+	Word     string
+	Statuses [numLetters]letterStatus
 }
 
 type gameStatus int
@@ -29,7 +29,7 @@ const (
 var correctWord string
 
 type gameState struct {
-	guesses    []guess
-	currStatus gameStatus
-	currGuess  int
+	Guesses    []guess    `json:"guesses"`
+	CurrStatus gameStatus `json:"curr_status"`
+	CurrGuess  int        `json:"curr_guess"`
 }
