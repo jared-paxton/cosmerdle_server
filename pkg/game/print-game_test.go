@@ -9,11 +9,11 @@ func TestPrintGame(t *testing.T) {
 
 	guess1 := guess{
 		Word:     "GUESS",
-		Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, diffPosition, notPresent},
+		Statuses: []letterStatus{notPresent, notPresent, notPresent, diffPosition, notPresent},
 	}
 	guess2 := guess{
 		Word:     "STATE",
-		Statuses: [numLetters]letterStatus{correct, correct, notPresent, notPresent, notPresent},
+		Statuses: []letterStatus{correct, correct, notPresent, notPresent, notPresent},
 	}
 	// guess3 := Guess{
 	// 	Word:          "STONE",
@@ -21,11 +21,11 @@ func TestPrintGame(t *testing.T) {
 	// }
 	guess4 := guess{
 		Word:     "STOMP",
-		Statuses: [numLetters]letterStatus{correct, correct, correct, diffPosition, notPresent},
+		Statuses: []letterStatus{correct, correct, correct, diffPosition, notPresent},
 	}
 	guess5 := guess{
 		Word:     "STORM",
-		Statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
+		Statuses: []letterStatus{correct, correct, correct, correct, correct},
 	}
 
 	gameState := gameState{

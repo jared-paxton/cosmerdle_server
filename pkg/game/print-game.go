@@ -43,7 +43,7 @@ func (g *guess) printRow(rowNum int) error {
 // printStatusesRow prints the statuses of each letter in a "table row" like format, with one letter status per "cell".
 // A :( means the letter is not in the word. A :/ means the letter is in the word but in a wrong position. A :) means
 // the letter is in the right position.
-func printStatusesRow(lettersStatus [numLetters]letterStatus) {
+func printStatusesRow(lettersStatus []letterStatus) {
 	row := "      |"
 	endChar := " "
 	for i, status := range lettersStatus {
@@ -104,7 +104,7 @@ func (gs *gameState) printGame() error {
 		fmt.Println("              WON!!!")
 	case Lost:
 		fmt.Println("             LOST :'(")
-		fmt.Println("         Word is:", getCorrectWord())
+		fmt.Println("         Word is:", CorrectWord())
 	}
 	fmt.Println("-------------------------------------------")
 	fmt.Println()

@@ -14,7 +14,7 @@ const (
 
 type guess struct {
 	Word     string
-	Statuses [numLetters]letterStatus
+	Statuses []letterStatus
 }
 
 type gameStatus int

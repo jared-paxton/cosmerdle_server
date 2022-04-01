@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func getCorrectWord() string {
+func CorrectWord() string {
 	return correctWord
 }
 
@@ -26,7 +26,7 @@ func (gs *gameState) makeGuess(userWord string) error {
 	// Default each letter to NotPresent
 	guess := guess{
 		Word:     userWord,
-		Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+		Statuses: []letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 	}
 
 	err := guess.isValid(gs.CurrGuess)

@@ -10,17 +10,17 @@ func TestIsValidWord(t *testing.T) {
 		{
 			// Word too short
 			Word:     strings.ToUpper("test"),
-			Statuses: [numLetters]letterStatus{notPresent, diffPosition, diffPosition, notPresent, notPresent},
+			Statuses: []letterStatus{notPresent, diffPosition, diffPosition, notPresent, notPresent},
 		},
 		{
 			// Word too long
 			Word:     strings.ToUpper("testing"),
-			Statuses: [numLetters]letterStatus{diffPosition, diffPosition, diffPosition, diffPosition, diffPosition},
+			Statuses: []letterStatus{diffPosition, diffPosition, diffPosition, diffPosition, diffPosition},
 		},
 		{
 			// Word not in bank
 			Word:     strings.ToUpper("about"),
-			Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+			Statuses: []letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 		},
 	}
 
@@ -34,7 +34,7 @@ func TestIsValidWord(t *testing.T) {
 	// Word in bank, but test if the current guess is greater than allowed guesses
 	guess := guess{
 		Word:     strings.ToUpper("storm"),
-		Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+		Statuses: []letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 	}
 	err := guess.isValid(maxGuesses + 1)
 	if err == nil {
@@ -50,19 +50,19 @@ func TestCheckGuess(t *testing.T) {
 	wantGuesses := [4]guess{
 		{
 			Word:     strings.ToUpper(userWords[0]),
-			Statuses: [numLetters]letterStatus{notPresent, diffPosition, notPresent, notPresent, diffPosition},
+			Statuses: []letterStatus{notPresent, diffPosition, notPresent, notPresent, diffPosition},
 		},
 		{
 			Word:     strings.ToUpper(userWords[1]),
-			Statuses: [numLetters]letterStatus{diffPosition, notPresent, diffPosition, notPresent, notPresent},
+			Statuses: []letterStatus{diffPosition, notPresent, diffPosition, notPresent, notPresent},
 		},
 		{
 			Word:     strings.ToUpper(userWords[2]),
-			Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+			Statuses: []letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 		},
 		{
 			Word:     strings.ToUpper(userWords[3]),
-			Statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
+			Statuses: []letterStatus{correct, correct, correct, correct, correct},
 		},
 	}
 
@@ -82,15 +82,15 @@ func TestMakeGuess(t *testing.T) {
 	wantGuesses := [3]guess{
 		{
 			Word:     strings.ToUpper(userWords[0]),
-			Statuses: [numLetters]letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
+			Statuses: []letterStatus{notPresent, notPresent, notPresent, notPresent, notPresent},
 		},
 		{
 			Word:     strings.ToUpper(userWords[1]),
-			Statuses: [numLetters]letterStatus{notPresent, diffPosition, notPresent, diffPosition, notPresent},
+			Statuses: []letterStatus{notPresent, diffPosition, notPresent, diffPosition, notPresent},
 		},
 		{
 			Word:     strings.ToUpper(userWords[2]),
-			Statuses: [numLetters]letterStatus{correct, correct, correct, correct, correct},
+			Statuses: []letterStatus{correct, correct, correct, correct, correct},
 		},
 	}
 	wantGameStates := [3]gameState{
