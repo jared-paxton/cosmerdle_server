@@ -4,15 +4,16 @@ import (
 	"log"
 
 	"github.com/jared-paxton/cosmerdle_server/pkg/game"
+	"github.com/jared-paxton/cosmerdle_server/pkg/user"
 )
 
 type Config struct {
-    Port int
-    Env string
-    Database struct {
-        DSN string
-        Driver string
-    }
+	Port     int
+	Env      string
+	Database struct {
+		DSN    string
+		Driver string
+	}
 }
 
 type application struct {
@@ -23,4 +24,5 @@ type application struct {
 
 type services struct {
 	gameService game.GameServicer
+	userService user.UserServicer
 }

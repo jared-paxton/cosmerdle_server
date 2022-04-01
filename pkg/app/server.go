@@ -10,6 +10,7 @@ import (
 
 	"github.com/jared-paxton/cosmerdle_server/pkg/db"
 	"github.com/jared-paxton/cosmerdle_server/pkg/game"
+	"github.com/jared-paxton/cosmerdle_server/pkg/user"
 )
 
 func NewApp(cfg Config, logger *log.Logger) (*application, error) {
@@ -23,7 +24,7 @@ func NewApp(cfg Config, logger *log.Logger) (*application, error) {
 	return &application{
 		config:      cfg,
 		logger:      logger,
-		appServices: newServicers(&dbAccessor),
+		appServices: newServicers(dbAccessor),
 	}, nil
 }
 
@@ -47,9 +48,10 @@ func (app *application) Run() error {
 	return nil
 }
 
-func newServicers(dbAccessor *db.DatabaseAccessor) *services {
+func newServicers(dbAccessor db.DatabaseAccessor) *services {
 	return &services{
-		gameService: game.NewGameServicer(dbAccessor),
+		gameService: game.NewGameService(dbAccessor),
+		userService: user.NewUserService(dbAccessor),
 	}
 }
 

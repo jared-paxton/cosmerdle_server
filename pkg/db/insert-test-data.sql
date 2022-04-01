@@ -21,3 +21,13 @@ INSERT INTO game_state (
   '2022-03-29',
   '{"storm"}'
 );
+
+INSERT INTO app_user (
+  user_id, 
+  created_on,
+  last_activity 
+) VALUES (
+  '123456789',
+  current_timestamp,
+  '2022-03-31'
+);

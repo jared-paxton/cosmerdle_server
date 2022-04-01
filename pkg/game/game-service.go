@@ -1,7 +1,6 @@
 package game
 
-type GameServicer interface{
-    
+type GameServicer interface {
 }
 
 type GameAccessor interface{}
@@ -10,7 +9,7 @@ type gameService struct {
 	accessor GameAccessor
 }
 
-func NewGameServicer(gameAccessor GameAccessor) *gameService {
+func NewGameService(gameAccessor GameAccessor) GameServicer {
 	return &gameService{
 		accessor: gameAccessor,
 	}

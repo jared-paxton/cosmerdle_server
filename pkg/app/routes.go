@@ -13,6 +13,7 @@ func (app *application) routes() http.Handler {
 	useCORS(router)
 
 	router.Get("/", app.accessGame)
+	router.Post("/", app.newUser)
 
 	return router
 }

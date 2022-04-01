@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type UserService interface {
+type UserServicer interface {
 	// Register(newUser NewUser) (User, error)
 	New() (NewAnonymousUser, error)
 }
@@ -22,19 +22,19 @@ type UserAccessor interface {
 	// RemoveUser(user User) error
 }
 
-func NewUserService(userAccessor UserAccessor) UserService {
+func NewUserService(userAccessor UserAccessor) UserServicer {
 	return &userService{
 		accessor: userAccessor,
 	}
 }
 
 func (us *userService) New() (NewAnonymousUser, error) {
-    user := NewAnonymousUser{
-        UserId: uuid.New().String(),
-        CreatedOn: time.Now(),
-        LastActivity: time.Now(),
-    }
-    
+	user := NewAnonymousUser{
+		UserId:       uuid.New().String(),
+		CreatedOn:    time.Now(),
+		LastActivity: time.Now(),
+	}
+
 	err := us.accessor.CreateAnonymousUser(user)
 	if err != nil {
 		return user, err
