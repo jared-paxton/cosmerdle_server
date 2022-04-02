@@ -6,7 +6,7 @@ func StartGame() *gameState {
 	state := initGameState(todaysWord)
 
 	// // Get Guesses from user
-	// userGuess := "FASIL"
+	// userGuess := "STORM"
 	// state.makeGuess(userGuess)
 
 	return state

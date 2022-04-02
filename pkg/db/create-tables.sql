@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS app_user (
   last_activity TIMESTAMP NOT NULL,
 );
 
--- game state talbe
+-- game state table
 CREATE TABLE IF NOT EXISTS game_state (
   gs_key serial PRIMARY KEY,
   user_key INT NOT NULL,
@@ -19,3 +19,5 @@ CREATE TABLE IF NOT EXISTS game_state (
   FOREIGN KEY (user_key)
       REFERENCES app_user (user_key)
 );
+
+-- TODO: add other tables like user stats, word tables, etc. 
